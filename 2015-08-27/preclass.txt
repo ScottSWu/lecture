@@ -7,14 +7,24 @@
     according to Amdahl's law for up to 128 cores.  If you know how,
     you should use a script to produce this plot, with both the serial
     fraction and the maximum number of cores as parameters.
+	
+	S = 1 / (0.1 + 0.9 / p)
+	Lazy screenshot from Wolfram Alpha:
+	[speedup.jpg]
 
 2.  Suppose a particular program can be partitioned into perfectly
     independent tasks, each of which takes time tau.  Tasks are
     set up, scheduled, and communicated to p workers at a (serial)
     central server; this takes an overhead time alpha per task.
     What is the theoretically achievable throughput (tasks/time)?
-
+	
+	Theoretical throughput = p / (alpha * p + tau)
+	
+	As p -> infinity, throughput -> 1 / alpha
+	
 3.  Under what circumstances is it best to not tune?
+
+	It is best not to tune when the time it takes to tune or the maintenance time is more than the time saved by tuning.
 
 4.  The class cluster consists of eight nodes and fifteen Xeon Phi
     accelerator boards.  Based on an online search for information on
@@ -23,5 +33,25 @@
     you computed this, and give URLs for where you got the parameters
     in your calculation.  (We will return to this question again after
     we cover some computer architecture.)
+	
+	From http://www.intel.com/content/www/us/en/benchmarks/server/xeon-phi/xeon-phi-theoretical-maximums.html
+	Each Xeon-Phi board gives 1.011 teraflops / second
+	15 of these would give 15.16 teraflops / second
+	
+	Edit from today
+	---
+	From http://ark.intel.com/products/71992/Intel-Xeon-Phi-Coprocessor-5110P-8GB-1_053-GHz-60-core
+	This number can also be obtained from
+	16 flops / cycle * 1.053 * 10^9 cycles / second * 60 cores = 1.010 teraflops / second
+	
+	From
+	http://ark.intel.com/products/83352/Intel-Xeon-Processor-E5-2620-v3-15M-Cache-2_40-GHz
+	Additionally are the 8 - 12 core nodes
+	8 nodes * 12 cores * 16 flops / cycle * 2.40 * 10^9 cycles = 3.686 teraflops / second
+	
+	A total of 18.846 teraflops
     
 5.  What is the approximate theoretical peak flop rate for your own machine?
+
+	Apparently the Intel Haswell chips support 16 flops per cycle using vector instructions (?).
+	16 flops / cycle * 2.50 * 10^9 cycles / second * 8 cores = 320 gigaflops / second

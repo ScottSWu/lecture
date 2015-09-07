@@ -11,12 +11,20 @@ with questions for class!
     you computed this, and give URLs for where you got the parameters
     in your calculation.  (We will return to this question again after
     we cover some computer architecture.)
+	https://software.intel.com/en-us/articles/intel-xeon-phi-coprocessor-codename-knights-corner
+	512-bit VPU = 8 FMA = 16 flops / second
+	16 flops / second * 60 cores * 1.053 * 10^9 cycles * 15 boards = 15.16 teraflops / second
     
 2.  What is the approximate theoretical peak flop rate for your own machine?
+
+	2 * 256 bit FMA = 16 flops / second
+	16 flops / second * 4 cores * 2.50 * 10^9 cycles = 160 gigaflops / second
 
 3.  Suppose there are t tasks that can be executed in a pipeline
     with p stages.  What is the speedup over serial execution of the
     same tasks?
+	
+	Each of the p stages can be done at once. Serial execution would take t * p stages. Pipelined execution would take t + p stages. The speedup is thus (t + p) / (t * p).
 
 4.  Consider the following list of tasks (assume they can't be pipelined):
 
@@ -30,6 +38,13 @@ with questions for class!
     What is the minimum serial time between starting to compile and having
     a compiled application?  What is the minimum parallel time given
     an arbitrary number of processors?
+	
+	GCC  OpenMPI        application
+	----   --             --
+	     OpenBLAS  LAPACK
+		   -          --
+	The minimum serial time is 2.75 hours. The minimum parallel time is 2.25 hours with two proessors.
+	
 
 5.  Clone the membench repository from GitHub:
 
@@ -42,6 +57,8 @@ with questions for class!
     in the leading comments of the Makefile).  Look at the output file
     timings-heat.pdf; what can you tell about the cache architecture
     on your machine from the plot?
+	
+	The fast timings near the end of the stride are a given because it only goes through a few loops. It also holds for many sizes up to a 16 (?) bytes. Above a size of 64kb, loading starts to take longer and longer.
 
 6.  From the cloned repository, check out the totient branch:
 
@@ -51,6 +68,8 @@ with questions for class!
     If you prefer, you can also look at the files on GitHub.  Either
     way, repeat the exercise of problem 5.  What can you tell about
     the cache architecture of the totient nodes?
+	
+	The shape of the heat map in the totient nodes are similar. The timing noticably changes color at around 64 kb and a stride of 4 kb, up until a stride 4x less than the size.
 
 7.  Implement the following three methods of computing the centroid
     of a million two-dimensional coordinates (double precision).
@@ -61,11 +80,18 @@ with questions for class!
 
     b.  Store an array of (x,y) coordinates; loop i and sum the xi,
         then sum the yi in a separate loop
-
+		
     c.  Store the xi in one array, the yi in a second array.
         Sum the xi, then sum the yi.
-
+		
     I recommend doing this on the class cluster using the Intel
     compiler.  To do this, run "module load cs5220" and run (e.g.)
 
         icc -o centroid centroid.c
+	
+	See centroid{1,3}.c
+	Compiled with -O0 (?)
+	
+	a. Took 4.59 million cycles
+	b. Took 7.15 million cycles
+	c. Took 7.87 million cycles

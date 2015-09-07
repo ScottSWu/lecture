@@ -18,6 +18,17 @@ In practice, this took X time.  This includes
 Consider the following questions:
 
 1. What is a simple model that would predict this time?
+
+The time to compute row counts is the only parallel portion of the exercise. Since the instructor must wait for all rows to be finished, the time taken to count rows is the maximum of all rows.
+time = time_start + max(time_row) + time_gather * rows + time_arithmetic * rows
+
 2. What about a simple model to predict time for one person to count?
+
+For a single person, counting one by one while keeping track is easy.
+time = time_count * number_of_people
+
 3. How big should the class be before the parallel method takes less time?
 
+The class does not necessarily have to be large (e.g. if everyone is in their own row), but the number of rows and the number of people in each row must be such that the time it takes for one person to count is greater than the overhead time to start, count and add the numbers.
+
+time_start + time_count * rowsize + time_gather * rows + time_arithmetic * rows > time_count * rowsize * rows
