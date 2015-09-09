@@ -7,8 +7,8 @@ for (i = 0; i < N; i++){
       tmp = 0
       for (k = 0; k < N; k++)
          tmp += A[i,k] * B[k,j]
-   }
       C[i,j] = tmp
+   }
 }
 
 Suppose data is in double-precsion floating point. We are interested in
@@ -22,22 +22,30 @@ something into an already-full cache.
 the memory-based AI of this code? (Hint: What is the memory-based AI of just the
 innermost loop?)
 
+	In the inner loop, there are 2N flops and 16N bytes loaded into cache at the beginning, AI = 1 / 8. The cache is small enough such that the second level loop would flush all items from B, but not A.
 
 2. Now suppose that the cache is substantially larger than 16N, but
 substantially smaller than 8N^2. What is the AI now?
 
+	AI = 2 / 8. A whole matrix will not fit into the cache, so for every round of the second loop it will be loading data.
 
 3. Now suppose the cache is large enough to hold all of A, B, and C. What is the
 AI now? (Hint: Writing to a byte of memory not already in the cache incurs two
 memory transfers: one to move the data to the cache for writing, and one to move
 the written data back to main memory.)
 
+	There will be 2N^3 flops, 16N^2 bytes loaded for A and B, and 16N^2 bytes written for C. The memory-based AI would be 2N / 32.
 
 4. Cache overflowing. On my CPU (Intel i7-4700 HQ), L1, L2, and L3 caches are 32
 KB, 256 KB, and 6 MB respectively. What is the largest problem size N that will
 fit in each cache? What is the arithmetic intensity associated with each problem
 size?
 
+	Using 24N^3 problem size, L1 can fit N = 11, L2 can fit N = 22, L3 can fit almost N = 64. Using 2N / 32, the arithmetic intensity for L1 is 11 / 16, L2 is 11 / 8, L3 is 4.
+	
+	---
+	
+	It is possible to fit larger sizes since the cache does not necessarily have to fit all of A, B, and C.
 
 5. My CPU has 4 cores, each of which can do 8 fused multiply-adds per cycle, has
 a clock rate of 2.4 GHz, and a memory bandwidth of 25.6 GB/s. At what arithmetic
