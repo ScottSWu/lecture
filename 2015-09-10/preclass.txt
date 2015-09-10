@@ -3,14 +3,60 @@
    host cores are used, for the moment).  How do things change with
    the addition of the two Phi boards?
    
+   Single node
    
+   59 GB/s memory bandwidth
+   460.8 GFlops/s
+   
+             |
+    461 GF/s |     _________
+             |   _/
+             | _/
+     15 GF/s |/
+             |_________________
+             0.25  7.81
+   
+   
+   Phi board
+   
+   320 GB/s memory bandwidth each
+   1.010 TFlops/s
+   
+             |
+   1010 GF/s |     _________
+             |   _/
+             | _/
+     80 GF/s |/
+             |_________________
+             0.25  3.16
+   
+   
+   Single node + 2 Phi boards
+   
+   320 GB/s memory bandwidth each
+   1.010 TFlops/s
+   
+   2481 GF/s |               __________
+             |          ____/
+   2206 GF/s |     ____/
+             |   _/
+             | _/
+    175 GF/s |/
+             |____________________________
+             0.25  3.16      7.81
 
 2. What is the difference between two cores and one core with
    hyperthreading?
 
+   Hyperthreading is just an issue of scheduling on a single core while two cores can truely run in parallel.
+
 3. Do a Google search to find a picture of how memories are arranged
    on the Phi architecture.  Describe the setup briefly in your own
    words.  Is the memory access uniform or non-uniform?
+
+   https://software.intel.com/sites/default/files/managed/c2/24/pcbPhiFront.png
+   
+   The memory seems to be placed all around, surrounding the processor cores. I would suppose then memory access is not uniform.
 
 4. Consider the parallel dot product implementations suggested in the
    slides.  As a function of the number of processors, the size of the
@@ -19,3 +65,9 @@
    [Note that dot products have low arithmetic intensity -- the
     roofline model may be useful for reasoning about the peak
     performance for computing pieces of the dot product]
+
+   Serial:
+       Time ~= 3 * s
+	   
+   Parallel:
+       Time ~= 3 * s / p + m * p + s
