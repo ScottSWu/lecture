@@ -2,6 +2,8 @@
    draw a roofline diagram for one totient node (assuming only the
    host cores are used, for the moment).  How do things change with
    the addition of the two Phi boards?
+   
+   
 
 2. What is the difference between two cores and one core with
    hyperthreading?

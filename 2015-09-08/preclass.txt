@@ -41,18 +41,23 @@ KB, 256 KB, and 6 MB respectively. What is the largest problem size N that will
 fit in each cache? What is the arithmetic intensity associated with each problem
 size?
 
-	Using 24N^3 problem size, L1 can fit N = 11, L2 can fit N = 22, L3 can fit almost N = 64. Using 2N / 32, the arithmetic intensity for L1 is 11 / 16, L2 is 11 / 8, L3 is 4.
+	Using 16N^2 problem size, L1 can fit N = 11, L2 can fit N = 22, L3 can fit almost N = 64. Using 2N / 32, the arithmetic intensity for L1 is 11 / 16, L2 is 11 / 8, L3 is 4.
 	
 	---
 	
-	It is possible to fit larger sizes since the cache does not necessarily have to fit all of A, B, and C.
+	It is possible to fit larger sizes since the cache does not necessarily have to fit all of A, B, and C, and would give different arithmetic intensities.
 
 5. My CPU has 4 cores, each of which can do 8 fused multiply-adds per cycle, has
 a clock rate of 2.4 GHz, and a memory bandwidth of 25.6 GB/s. At what arithmetic
 intensity does my machine become CPU-bound?
 
+	Total flops = 4 * 8 * 2.4 * 10^9 = 76.8 GFlops / second
+	AI = flops / bytes transfered = 76.8 * 10^9 / (25.6 * 10^9) = 3
 
 6. So, for what size range for N will naive matmul be CPU-bound on my machine?
 
+	Using 2N / 32, matmul will be CPU bound at N = 48.
 
 7. So, what will a plot of Flops/sec vs N look like?
+
+	
