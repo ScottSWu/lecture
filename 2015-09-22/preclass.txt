@@ -1,7 +1,11 @@
 0.  How much time did you spend on this pre-class exercise, and when?
 
+    Midnight.
+
 1.  What are one or two points that you found least clear in the
     9/22 slide decks (including the narration)?
+    
+    Monte Carlo methods - RNG generation, perhaps because I am not familiar with random number generation.
 
 2.  The pthread_mc.c file in the demo subdirectory runs a Monte Carlo
     simulation to estimate the expected value of a uniform random
@@ -12,17 +16,62 @@
        terms of the number of trials (N), number of processors (p),
        time per trial (t_trial), and time to update the global
        counters in the critical section (t_update).
+       
+       run time = time to run all trials + time to accumulate trials
+                = (t_trial * N / p) + (t_update * p)
 
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
        a totient compute node.
+       
+       If we look at 1 & 2 threads, then
+            t_trial * 1000500 / 1 + t_update * 1 = 7.088000e-03
+            t_trial * 1001000 / 2 + t_update * 2 = 3.776000e-03
+       
+       After a bit of math,
+            t_trial = 6.931e-09
+            t_update = 1.535e-04
+       
+Data:
+Changing -p
+1 threads (pthreads): 0.49983 (0.000288609): 7.088000e-03 s, 1000500 trials
+2 threads (pthreads): 0.499878 (0.000288521): 3.776000e-03 s, 1001000 trials
+3 threads (pthreads): 0.499734 (0.000288454): 2.567000e-03 s, 1001500 trials
+4 threads (pthreads): 0.499819 (0.000288455): 2.067000e-03 s, 1002000 trials
+5 threads (pthreads): 0.499915 (0.000288398): 1.618000e-03 s, 1002500 trials
+6 threads (pthreads): 0.499754 (0.000288341): 1.484000e-03 s, 1003000 trials
+7 threads (pthreads): 0.499888 (0.000288277): 1.272000e-03 s, 1003500 trials
+8 threads (pthreads): 0.500075 (0.00028825): 1.172000e-03 s, 1004000 trials
+
+Changing -b 100
+1 threads (pthreads): 0.499831 (0.000288668): 7.426000e-03 s, 1000100 trials
+4 threads (pthreads): 0.499848 (0.000288722): 4.549000e-03 s, 1000400 trials
+8 threads (pthreads): 0.500099 (0.000288754): 6.020000e-03 s, 1000800 trials
+
+Changing -b 1000
+1 threads (pthreads): 0.499816 (0.000288541): 7.065000e-03 s, 1001000 trials
+4 threads (pthreads): 0.499734 (0.000288193): 1.975000e-03 s, 1004000 trials
+8 threads (pthreads): 0.50008 (0.000287697): 1.107000e-03 s, 1008000 trials
+
+Changing -b 10000
+1 threads (pthreads): 0.499812 (0.000287244): 7.080000e-03 s, 1010000 trials
+4 threads (pthreads): 0.499758 (0.000283169): 1.947000e-03 s, 1040000 trials
+8 threads (pthreads): 0.500051 (0.000277922): 1.195000e-03 s, 1080000 trials
+
+Changing -b 100000
+1 threads (pthreads): 0.499906 (0.00027519): 7.702000e-03 s, 1100000 trials
+4 threads (pthreads): 0.499919 (0.000244064): 2.930000e-03 s, 1400000 trials
+8 threads (pthreads): 0.499972 (0.000215205): 2.249000e-03 s, 1800000 trials
 
     c) Based on your model, suggest a strategy for choosing the batch
        size.  How might you generalize this strategy to automatically
        choose batch sizes for different types of computational
        experiments?
+       
+       I'm not quite sure how batch size factored into the model. I suppose batch size would be a factor in t_update, which in that case we have a function of run time that we could minimize and compute for a batch size.
     
 3.  In the workq subdirectory of this directory, there is a basic work
     queue implementation.  Following the strategy outlined in the
     slides, add synchronization calls in the locations marked TODO.
     You should run the code to make sure it behaves as expected!
+    

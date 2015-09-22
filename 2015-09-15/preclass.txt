@@ -7,12 +7,28 @@ the glider pattern for a few generations.
 
 1.  What are one or two points that you found least clear in the
     9/15 slide decks (including the narration)?
+    
+    On the Particle Systems slides, I don't quite understand "pass particles in a round-robin manner."
 
 2.  In the basic implementation provided, what size board for the Game
     of Life would fit in L3 cache for one of the totient nodes?  Add a
     timer to the code and run on the totient node.  How many cells per
     second can we update for a board that fits in L3 cache?  For a
     board that does not fit?
+    
+    L3 cache is 15 MB. The board holds two generations, each full of 1 byte characters.
+    sqrt(15 * 10^6 / 2) ~ 2738 squares
+    
+    @ 2000 squares, 10 generations
+        2000 * 2000 * 10 / 4.5 = 8.9 million updates / second
+    @ 4000 squares, 10 generations
+        4000 * 4000 * 10 / 18.0 = 8.9 million updates / second
+    @ 8000 squares, 10 generations
+        8000 * 8000 * 10 / 66.8 = 9.5 million updates / second
+    @ 200 squares, 100 generations
+        200 * 200 * 100 / 0.85 s = 4.7 million updates / second
+    
+    (Am I doing something wrong?)
 
 3.  Assuming that we want to advance time by several generations,
     suggest a blocking strategy that would improve the operational
@@ -25,6 +41,10 @@ the glider pattern for a few generations.
     according to the domain decomposition strategy outlined in the
     slides.  Do you think you would see good speedups on one of
     the totient nodes?  Why or why not?
+    
+    To use domain decomposition, we would need to coordinate and pass boundary data to each node. Data can be sent and received while the rest of the known cells are being computed.
+    
+    There would seem to be good speedup since depending on generations, not all information needs to be passed back to a head node.
 
 5.  Suppose we want to compute long-range interactions between two
     sets of particles in parallel using the obvious n^2 algorithm in a
