@@ -19,6 +19,11 @@
        
        run time = time to run all trials + time to accumulate trials
                 = (t_trial * N / p) + (t_update * p)
+                = (N / b) * (t_trial * b / p + t_update * p)
+                = t_trial * N / p + t_update * N * p / b
+                
+                = t_trial * N / p + t_update * N / b
+                
 
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
