@@ -13,9 +13,10 @@
     while "-b" sets the number of trials between synchronizations.
 
     a) Write a model for the run time for this simulation code in
-       terms of the number of trials (N), number of processors (p),
-       time per trial (t_trial), and time to update the global
-       counters in the critical section (t_update).
+       terms of the number of trials (N), batch size (B),
+       number of processors (p), time per trial (t_trial), 
+       and time to update the global counters in the critical 
+       section (t_update).
        
        run time = time to run all trials + time to accumulate trials
                 = (t_trial * N / p) + (t_update * p)
@@ -23,7 +24,6 @@
                 = t_trial * N / p + t_update * N * p / b
                 
                 = t_trial * N / p + t_update * N / b
-                
 
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
